@@ -102,17 +102,17 @@ function startSocketServer() {
 
         socket.on('rightPaddleUp', function() {
             rightSpeed = -1*speed;
-            io.emit('rightPaddleUp',  {leftSpeed});
+            io.emit('rightPaddleUp',  {rightSpeed});
         });
 
         socket.on('rightPaddleStop', function() {
             rightSpeed = 0;
-            io.emit('rightPaddleStop',  {leftSpeed});
+            io.emit('rightPaddleStop',  {rightSpeed});
         });
 
         socket.on('rightPaddleDown', function() {
             rightSpeed = speed;
-            io.emit('rightPaddleDown',  {leftSpeed});
+            io.emit('rightPaddleDown',  {rightSpeed});
         });        
     });
 }
