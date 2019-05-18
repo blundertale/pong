@@ -1,0 +1,25 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "Created.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glogou/pong.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/glogou/pong/issues"
+  },
+  "homepage": "https://github.com/glogou/pong#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
+  }
+}
