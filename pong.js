@@ -15,16 +15,21 @@ const app = express()						// Creating a variable: app, to receive and respond t
     , io = Io(server)
     ;
 
+// paddles info
 let speed = 1;
 let leftPosition = 44;
 let rightPosition = 44;
 let paddleHeight = 12;
 let leftSpeed = 0;
 let rightSpeed = 0;
+
+// ball info
 let ballSpeed = 1;
 let angle;
 let direction;
 let players = [];
+let ballSize = 3;
+let ballPosition = {x: 50, y: 50};      // initial position
 
 /* MIDDLEWARE TO LOOK AT THE REQUEST BEFORE HANDLING IT */
 app.use(bodyParser.json({					// Limiting the amount of data the client can send to 50mb
@@ -76,7 +81,9 @@ function startSocketServer() {
                                 rightSpeed, 
                                 angle, 
                                 direction, 
-                                ballSpeed});
+                                ballSpeed, 
+                                ballSize, 
+                                ballPosition});
         }
 
         // if we only have one player
