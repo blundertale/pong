@@ -31,6 +31,8 @@ let players = [];
 let ballSize = 3;
 let ballPosition = {x: 50, y: 50};      // initial position
 
+let score = {left: 0, right: 0};
+
 /* MIDDLEWARE TO LOOK AT THE REQUEST BEFORE HANDLING IT */
 app.use(bodyParser.json({					// Limiting the amount of data the client can send to 50mb
     limit: '50mb'
@@ -56,6 +58,29 @@ function startSocketServer() {
         
         console.log(players.length);
 
+        function initialize()
+        {
+            // random choose a number that is -1 or 1
+            direction = Math.random() <=0.5 ? -1 : 1;
+
+            // random choose a number between 
+            angle = ((Math.random() - 0.5)*Math.PI*2)/3;
+
+            // both players receive message, from channel 'start'
+            io.emit('start', {speed, 
+                                score,
+                                leftPosition, 
+                                rightPosition, 
+                                paddleHeight, 
+                                leftSpeed,
+                                rightSpeed, 
+                                angle, 
+                                direction, 
+                                ballSpeed, 
+                                ballSize, 
+                                ballPosition});            
+        }
+
         // if we have more than two players
         if(players.length > 2)
         {
@@ -66,24 +91,7 @@ function startSocketServer() {
         // if we have two players
         if(players.length === 2)
         {
-            // random choose a number that is -1 or 1
-            direction = Math.random() <=0.5 ? -1 : 1;
-
-            // random choose a number between -pi/4 to pi/4
-            angle = ((Math.random() - 0.5)*Math.PI*2)/3;
-
-            // both players receive message, from channel 'start'
-            io.emit('start', {speed, 
-                                leftPosition, 
-                                rightPosition, 
-                                paddleHeight, 
-                                leftSpeed,
-                                rightSpeed, 
-                                angle, 
-                                direction, 
-                                ballSpeed, 
-                                ballSize, 
-                                ballPosition});
+            initialize();
         }
 
         // if we only have one player
@@ -98,6 +106,7 @@ function startSocketServer() {
             console.log('SOMEONE DISCONNECTED');
             console.log("socket = "+socket.id)
 
+            score = { left: 0, right : 0}
             // javascript way to remove a player
             // socket has an element of id.
             players = players.filter(player => player.id !== socket.id);
@@ -134,6 +143,23 @@ function startSocketServer() {
         socket.on('rightPaddleDown', function() {
             rightSpeed = speed;
             io.emit('rightPaddleDown',  {rightSpeed});
+        });
+
+        // ball pass right boundary            
+        socket.on('rightBallPass', function() {
+            score.left ++;
+
+            // put the ball to initialized position
+            initialize();
+
+        });
+
+        // ball pass left boundary
+        socket.on('leftBallPass', function() {
+            score.right ++;
+
+            // put the ball to initialized position
+            initialize();
         });        
     });
 }
