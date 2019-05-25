@@ -21,7 +21,9 @@ let rightPosition = 44;
 let paddleHeight = 12;
 let leftSpeed = 0;
 let rightSpeed = 0;
-
+let ballSpeed = 1;
+let angle;
+let direction;
 let players = [];
 
 /* MIDDLEWARE TO LOOK AT THE REQUEST BEFORE HANDLING IT */
@@ -49,27 +51,38 @@ function startSocketServer() {
         
         console.log(players.length);
 
+        // if we have more than two players
         if(players.length > 2)
         {
             // only person on the socket receive message from channel 'goaway'
             socket.emit('goaway', 'go away');
         }
 
-        
+        // if we have two players
         if(players.length === 2)
         {
+            // random choose a number that is -1 or 1
+            direction = Math.random() <=0.5 ? -1 : 1;
+
+            // random choose a number between -pi/4 to pi/4
+            angle = ((Math.random() - 0.5)*Math.PI*2)/3;
+
             // both players receive message, from channel 'start'
             io.emit('start', {speed, 
                                 leftPosition, 
                                 rightPosition, 
                                 paddleHeight, 
                                 leftSpeed,
-                                rightSpeed});
+                                rightSpeed, 
+                                angle, 
+                                direction, 
+                                ballSpeed});
         }
 
+        // if we only have one player
         if(players.length === 1)
         {
-            // only one play receive message, from channel 'waiting'
+            // only one player receive message, from channel 'waiting'
             socket.emit('waiting', 'bring your friends');
         }
 
@@ -84,6 +97,7 @@ function startSocketServer() {
             console.log(players.length);
         });
 
+        // use leftSpeed and rightSpeed to control how leftPaddle and rightPaddle move
         socket.on('leftPaddleUp', function() {
             leftSpeed = -1*speed;
             io.emit('leftPaddleUp',  {leftSpeed});
