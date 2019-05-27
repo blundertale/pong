@@ -49,7 +49,10 @@ app.use(bodyParser.urlencoded({ 			// Allowing the body parser to parse many dif
 
 
 /* ROUTES TO HANDLE THE REQUEST */
-/* pipe() will relay information immediately without waiting to fill up the queue ? */
+/* pipe() will relay information immediately without waiting to fill up the queue */
+/* Because of the followiing app.get(), we can access this game using URL such as: */
+/* https://pong2020.herokuapp.com/ when we put the code on heroku */
+
 app.get('/', (req, res, next) => {			// Recieving a request from the client when there is no path
     request.get('https://guest4.wisen.space/pong.html').pipe(res);
 });
@@ -259,4 +262,5 @@ function startServer() {
     server.listen(port);						// Telling the server to start listening
 }
 
+// starting 
 startServer();
